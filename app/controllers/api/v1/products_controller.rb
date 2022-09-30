@@ -8,13 +8,14 @@ class Api::V1::ProductsController < ApplicationController
   end
 
   def show
-    render json: ProductSerializer.new(@products).serializable_hash.to_json
+    options = { include: [:user]}
+    render json: ProductSerializer.new(@product, options).serializable_hash.to_json
   end
 
   def create
     product = current_user.products.build(product_params)
     if product.save
-      render json: ProductSerializer.new(products).serializable_hash.to_json, status: :created
+      render json: ProductSerializer.new(product).serializable_hash.to_json, status: :created
     else
       render json: { errors: product.errors },
       status: :unprocessable_entity
